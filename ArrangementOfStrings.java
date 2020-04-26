@@ -3,11 +3,8 @@
  * Created: 2020/4/25
  */
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.LinkedList;
-import java.util.List;
 
+import java.util.*;
 /**
  * 字符串的排列
  * 输入一个字符串, 按字典序打印出该字符串中字符的所有排列。
@@ -15,35 +12,45 @@ import java.util.List;
  */
 public class ArrangementOfStrings {
 
-    ArrayList<String> list = new ArrayList<>();
-    char[] arr;
-
     public ArrayList<String> Permutation(String str) {
-        arr = str.toCharArray();
-        recursion(0);
-        return list;
-    }
-
-    private void recursion(int cur) {
-        if (cur == arr.length - 1) {
-            list.add(String.valueOf(arr)); // 将字符数组换为字符串
-            return;
-        }
-        HashSet<Character> set = new HashSet<>();
-        for (int i = cur; i < arr.length; i++) {
-            if (set.contains(arr[i])) {
-                continue;
+        ArrayList<String> res = new ArrayList<String>();
+        if(str.length() == 0) return res;
+        char [] array = str.toCharArray();
+        Arrays.sort(array);
+        String s = new String(array);
+        res.add(str);
+        while(true) {
+            s = nextString(s);
+            if(!s.equals("finish")) {
+                res.add(s);
+            } else {
+                break;
             }
-            set.add(arr[i]);
-            swap(i, cur);
-            recursion(cur + 1);
-            swap(i, cur);
         }
+        return res;
     }
 
-    private void swap(int i, int cur) {
-        char tmp = arr[i];
-        arr[i] = arr[cur];
-        arr[cur] = tmp;
+    public String nextString(String str) {
+        char [] array = str.toCharArray();
+        int length = str.length();
+        int i = length-2;
+        for(; i>=0 && array[i] >= array[i+1]; i--);
+        if(i == -1) {
+            return "finish";
+        }
+        int j = length-1;
+        for(; j>=0 && array[j] <= array[i]; j--);
+        //swap i,j
+        char tmp = array[i];
+        array[i] = array[j];
+        array[j] = tmp;
+        //swap i,j
+        for(int a=i+1, b=length-1; a<b;a++,b--) {
+            tmp = array[a];
+            array[a] = array[b];
+            array[b] = tmp;
+        }
+        return new String(array);
     }
+
 }
